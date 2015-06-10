@@ -6,8 +6,6 @@ from math import cos, sin, pi
 MAX_STEPS = 100
 
 def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
-    ##scanline_convert
-    ##z_buffer
     add_point( points, x0, y0, z0 )
     add_point( points, x1, y1, z1 )
     add_point( points, x2, y2, z2 )
@@ -20,7 +18,7 @@ def draw_polygons( points, screen, color ):
 
     p = 0
     while p < len( points ) - 2:
-
+        #backface culling
         if calculate_dot( points, p ) >= 0:
             draw_line( screen, points[p][0], points[p][1],
                        points[p+1][0], points[p+1][1], color )
@@ -28,8 +26,16 @@ def draw_polygons( points, screen, color ):
                        points[p+2][0], points[p+2][1], color )
             draw_line( screen, points[p+2][0], points[p+2][1],
                        points[p][0], points[p][1], color )
+            scanline_convert( points,
+                              points[p][0], points[p][1],
+                              points[p+1][0], points[p+2][1],
+                              points[p+2][0], points[p+2][1] )
         p+= 3
 
+
+def scanline_convert( points, x0, y0, x1, y1, x2, y2 ):
+    #WRITE THIS
+    return 0
 
 
 def add_box( points, x, y, z, width, height, depth ):
@@ -293,6 +299,7 @@ def add_point( matrix, x, y, z=0 ):
 
 
 def draw_line( screen, x0, y0, x1, y1, color ):
+    #zbuff somewhere in here
     dx = x1 - x0
     dy = y1 - y0
     if dx + dy < 0:
