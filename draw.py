@@ -35,14 +35,28 @@ def draw_polygons( points, screen, color ):
 
 def scanline_convert( points, x0, y0, x1, y1, x2, y2 ):
     #WRITE THIS
+    Bx = find_coord("bot", "x", x0, y0, x1, y1, x2, y2)
+    Mx = find_coord("mid", "x", x0, y0, x1, y1, x2, y2)
+    Tx = find_coord("top", "x", x0, y0, x1, y1, x2, y2)
+
+
+    
     return 0
 
+def find_coord( point, coord, x0, y0, x1, y1, x2, y2 ):
+    ret = 0
+    if coord=="x":
+        if x0<=x1 && x0<=x2:
+            ret = x0
+            ##I WILL WRITE - shuz
+    
+    return ret
 
 def add_box( points, x, y, z, width, height, depth ):
     x1 = x + width
     y1 = y - height
     z1 = z - depth
-
+    
     #front
     add_polygon( points, 
                  x, y, z, 
