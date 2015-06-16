@@ -113,8 +113,6 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
         My = Ty
         Ty = temp
         ##not fully helping. idek
-    X0 = Bx
-    X1 = Bx
     if Ty - By == 0:
         d0 = 0
     else:
@@ -125,7 +123,8 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
         d1 = 1.0*(Mx-Bx)/(My-By)
         #print "pnts:(",x0,", ",y0,")(",x1,", ",y1,")(",x2,", ",y2,")"
     #print "vals:(",Bx,", ",By,")(",Mx,", ",My,")(",Tx,", ",Ty,")"
-
+    X0 = Bx
+    X1 = Bx
     y = By
     while (Ty - y) > 0:
         if (By - .5) <= My <= (By + .5):
@@ -137,10 +136,9 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
                 d1 = 1.0 * (Tx - Mx) / (Ty - My)
 
         X0 += d0
-        X1 += d1 
-        By+= 1
+        X1 += d1
         y += 1
-        draw_line(screen, X0, By, X1, By, color)
+        draw_line(screen, X0, y, X1, y, color)
     return 0
 
 
