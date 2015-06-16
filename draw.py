@@ -128,13 +128,13 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
 
     y = By
     while (Ty - y) > 0:
-        if By-.5<=My<=By+.5:
+        if (By - .5) <= My <= (By + .5):
             d1 = 0
         if ( y >= My ):
-            if My-0.5<=Ty<=My+.5:
+            if (My - 0.5) <= Ty <= (My + .5):
                 d1 = 0
             else:
-                d1 = 1.0 * (Tx - Mx)/ (Ty - My)
+                d1 = 1.0 * (Tx - Mx) / (Ty - My)
 
         X0 += d0
         X1 += d1 
