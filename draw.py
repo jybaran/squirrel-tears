@@ -115,11 +115,11 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
     y = 0
     X0 = Bx
     X1 = Bx
-    if Ty - By == 0:
+    if Ty  == By:
         d0 = 0
     else:
         d0 = 1.0*(Tx-Bx)/(Ty-By)
-    if My - By == 0:
+    if My  == By:
         d1 = 0
     else:
         d1 = 1.0*(Mx-Bx)/(My-By)
