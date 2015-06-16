@@ -35,74 +35,15 @@ def draw_polygons( points, screen, color ):
 
 
 def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
-    #WRITE THIS
-    Bx = 0
-    By = 0
-    Mx = 0
-    My = 0
-    Tx = 0
-    Ty = 0
-    #find Bx, By
-    if y0 == y1:
-        Mx = x0
-        My = y0
-        if y1 == y2:
-            return 
-        if y1 > y2: # if y0 and y1 are on top, start frrom bottom which would be y2
-            Bx = x2
-            By = y2
-            Tx = x1
-            Ty = y1
-        else:
-            Bx = x1
-            By = y1
-            Tx = x2
-            Ty = y2
-    if y0 < y1:
-        if y0 < y2:
-            Bx = x0
-            By = y0
-            if y2 > y1:
-                Tx = x2
-                Ty = y2
-                Mx = x1  
-                My = y1
+    s = sorted([(x0,y0),(x1,y1),(x2,y2)])
 
-            else:
-                Tx = x1
-                Ty = y1
-                Mx = x2  
-                My = y2
-
-        else:
-            Bx = x2
-            By = y2
-            Tx = x1
-            Ty = y1
-            Mx = x0
-            My = y0
-    else:   #y1 < y0
-        if y1 < y2:
-            Bx = x1
-            By = y1
-            if y2 > y0:
-                Tx = x2
-                Ty = y2
-                Mx = x0
-                My = y0
-            else:
-                Tx = x0
-                Ty = y0
-                Mx = x2
-                My = y2
-        else:
-            Bx = x2
-            By = y2
-            Tx = x1
-            Ty = y1
-            Mx = x0
-            My = y0
-
+    Bx = s[0][0]
+    By = s[0][1]
+    Mx = s[1][0]
+    My = s[1][1]
+    Tx = s[2][0]
+    Ty = s[2][1]
+    
     y = 0
     X0 = Bx
     X1 = Bx
