@@ -124,7 +124,7 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
     else:
         d1 = 1.0*(Mx-Bx)/(My-By)
         #print "pnts:(",x0,", ",y0,")(",x1,", ",y1,")(",x2,", ",y2,")"
-    print "vals:(",Bx,", ",By,")(",Mx,", ",My,")(",Tx,", ",Ty,")"
+        #print "vals:(",Bx,", ",By,")(",Mx,", ",My,")(",Tx,", ",Ty,")"
 
     while y< Ty - By:      
         if (y>=My):
