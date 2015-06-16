@@ -44,22 +44,22 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
     Tx = 0
     Ty = 0
     #find Bx, By
-    if y0 == y1:
+    if y0 == y1: #two are the same
         Mx = x0
         My = y0
-        if y1 == y2:
-            return 
-        if y1 > y2: 
+        if y1 > y2: #third pt is below other two
             Bx = x2
             By = y2
             Tx = x1
             Ty = y1
-        else:
+        elif y1 < y2: #third pt is above other two
             Bx = x1
             By = y1
             Tx = x2
             Ty = y2
-    if y0 < y1:
+        else: #this would be a line
+            return
+    elif y0 < y1:
         if y0 < y2:
             Bx = x0
             By = y0
@@ -68,7 +68,6 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
                 Ty = y2
                 Mx = x1  
                 My = y1
-
             else:
                 Tx = x1
                 Ty = y1
