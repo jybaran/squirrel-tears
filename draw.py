@@ -103,6 +103,15 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
             Mx = x0
             My = y0
 
+    ##im seeing errors in Mx,My and Tx,Ty assignment
+    if My>Ty:
+        temp = Mx
+        Mx = Tx
+        Tx = temp
+        temp = My
+        My = Ty
+        Ty = temp
+        
     y = 0
     X0 = Bx
     X1 = Bx
@@ -114,8 +123,9 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
         d1 = 0
     else:
         d1 = 1.0*(Mx-Bx)/(My-By)
-        #print "pnts:("+x0+", "+y0+")("+x1+", "+y1+")("+x2+", "+y2+")"
-        #print "vals:("+Bx+", "+By+")("+Mx+", "+My+")("+Tx+", "+Ty+")"
+        #print "pnts:(",x0,", ",y0,")(",x1,", ",y1,")(",x2,", ",y2,")"
+    print "vals:(",Bx,", ",By,")(",Mx,", ",My,")(",Tx,", ",Ty,")"
+
     while y< Ty - By:      
         if (y>=My):
             d1 = 1.0 * (Tx - Mx)/ (Ty - My)
