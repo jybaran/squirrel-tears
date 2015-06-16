@@ -88,10 +88,10 @@ def first_pass( commands ):
     for command in commands:
         cmd =command[0]
         if cmd == "frames":
-            print "frames"
-            print command[1]
+            #print "frames"
+            #print command[1]
             num_frames = int(command[1])
-            print num_frames
+            #print num_frames
         elif cmd == "basename":
             basename = command[1]
         elif cmd == "vary":
@@ -106,8 +106,8 @@ def first_pass( commands ):
     if has_anim and num_frames == 0:
         print "You used vary but failed to set frames. The program will now exit"
         exit(0)
-    print num_frames
-    print basename
+        #print num_frames
+        #print basename
 
 
 
@@ -131,7 +131,7 @@ def first_pass( commands ):
 knobs = []
 def second_pass( commands, num_frames ):
     global varies
-    print varies
+    #print varies
     for frame in range(0,num_frames):
         knobs.append( {} )
         startsends={}
@@ -146,7 +146,7 @@ def second_pass( commands, num_frames ):
             if knob not in knobs[frame]:
                 knobs[frame][knob]= startsends[min(startsends.keys())]
         
-    print knobs
+                #print knobs
 
 
 
@@ -175,10 +175,10 @@ def run(filename):
 
     screen = new_screen()
     first_pass(commands)
-    print num_frames
-    print basename
+    #print num_frames
+    #print basename
     second_pass(commands,num_frames)
-    print "STACK: " + str(stack)
+    #print "STACK: " + str(stack)
     for frame in range(0,num_frames):
         for command in commands:
             if command[0] == "pop":
@@ -242,7 +242,7 @@ def run(filename):
                     yval = command[2]
                     zval = command[3]
                     if command[len(command)-1]:
-                        print "knobing the move"
+                        #print "knobing the move"
                         xval*=knobs[frame][command[len(command)-1]]
                         yval*=knobs[frame][command[len(command)-1]]
                         zval*=knobs[frame][command[len(command)-1]]
@@ -262,7 +262,7 @@ def run(filename):
                 
                 elif command[0] == "rotate":
                     angle = command[2] * (math.pi / 180)
-                    print angle
+                    #print angle
                     if command[len(command)-1]:
                         angle*=knobs[frame][command[len(command)-1]]
                     if command[1] == 'x':
