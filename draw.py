@@ -128,7 +128,7 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
     y = By
     while (Ty - y) > 0:
         if ( y >= My ):
-            d1 = 1.0 * (Tx - Mx)/ (Ty - My)
+            d1 = 1.0 * (Tx - Mx) / (Ty - My)
         draw_line(screen, X0, By, X1, By, color)
         X0 += d0
         X1 += d1 
