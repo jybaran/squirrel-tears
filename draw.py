@@ -26,6 +26,7 @@ def draw_polygons( points, screen, color ):
                        points[p+2][0], points[p+2][1], color )
             draw_line( screen, points[p+2][0], points[p+2][1],
                        points[p][0], points[p][1], color )
+            #scanline conversion
             scanline_convert( screen, color,
                               points,
                               points[p][0], points[p][1],
@@ -48,7 +49,7 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
         My = y0
         if y1 == y2:
             return 
-        if y1 > y2: # if y0 and y1 are on top, start frrom bottom which would be y2
+        if y1 > y2: 
             Bx = x2
             By = y2
             Tx = x1
@@ -111,7 +112,7 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
         temp = My
         My = Ty
         Ty = temp
-        
+        ##not fully helping. idek
     y = 0
     X0 = Bx
     X1 = Bx
