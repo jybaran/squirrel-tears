@@ -26,31 +26,105 @@ def draw_polygons( points, screen, color ):
                        points[p+2][0], points[p+2][1], color )
             draw_line( screen, points[p+2][0], points[p+2][1],
                        points[p][0], points[p][1], color )
-            scanline_convert( points,
+            scanline_convert( screen, color,
+                              points,
                               points[p][0], points[p][1],
                               points[p+1][0], points[p+2][1],
                               points[p+2][0], points[p+2][1] )
         p+= 3
 
 
-def scanline_convert( points, x0, y0, x1, y1, x2, y2 ):
+def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
     #WRITE THIS
-    Bx = find_coord("bot", "x", x0, y0, x1, y1, x2, y2)
-    Mx = find_coord("mid", "x", x0, y0, x1, y1, x2, y2)
-    Tx = find_coord("top", "x", x0, y0, x1, y1, x2, y2)
+    Bx = 0
+    By = 0
+    Mx = 0
+    My = 0
+    Tx = 0
+    Ty = 0
+    #find Bx, By
+    if y0 == y1:
+        Mx = x0
+        My = y0
+        if y1 == y2:
+            return 
+        if y1 > y2: # if y0 and y1 are on top, start frrom bottom which would be y2
+            Bx = x2
+            By = y2
+            Tx = x1
+            Ty = y1
+        else:
+            Bx = x1
+            By = y1
+            Tx = x2
+            Ty = y2
+    if y0 < y1:
+        if y0 < y2:
+            Bx = x0
+            By = y0
+            if y2 > y1:
+                Tx = x2
+                Ty = y2
+                Mx = x1  
+                My = y1
 
+            else:
+                Tx = x1
+                Ty = y1
+                Mx = x2  
+                My = y2
 
-    
+        else:
+            Bx = x2
+            By = y2
+            Tx = x1
+            Ty = y1
+            Mx = x0
+            My = y0
+    else:   #y1 < y0
+        if y1 < y2:
+            Bx = x1
+            By = y1
+            if y2 > y0:
+                Tx = x2
+                Ty = y2
+                Mx = x0
+                My = y0
+            else:
+                Tx = x0
+                Ty = y0
+                Mx = x2
+                My = y2
+        else:
+            Bx = x2
+            By = y2
+            Tx = x1
+            Ty = y1
+            Mx = x0
+            My = y0
+
+    y = 0
+    X0 = Bx
+    X1 = Bx
+    if Ty - By == 0:
+        d0 = 0
+    else:
+        d0 = 1.0*(Tx-Bx)/(Ty-By)
+    if My - By == 0:
+        d1 = 0
+    else:
+        d1 = 1.0*(Mx-Bx)/(My-By)
+
+    while y< Ty - By:      
+        if (y>=My):
+            d1 = 1.0 * (Tx - Mx)/ (Ty - My)
+        draw_line(screen, X0, By, X1, By, color)
+        X0 += d0
+        X1 += d1 
+        By+= 1
+        y += 1
     return 0
 
-def find_coord( point, coord, x0, y0, x1, y1, x2, y2 ):
-    ret = 0
-    if coord=="x":
-        if x0<=x1 && x0<=x2:
-            ret = x0
-            ##I WILL WRITE - shuz
-    
-    return ret
 
 def add_box( points, x, y, z, width, height, depth ):
     x1 = x + width
