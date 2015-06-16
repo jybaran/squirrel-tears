@@ -104,7 +104,7 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
             My = y0
 
     ##im seeing errors in Mx,My and Tx,Ty assignment
-    if My>Ty:
+    if My > Ty:
         temp = Mx
         Mx = Tx
         Tx = temp
@@ -112,22 +112,22 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
         My = Ty
         Ty = temp
         ##not fully helping. idek
-    y = 0
     X0 = Bx
     X1 = Bx
-    if Ty  == By:
+    if Ty - By == 0:
         d0 = 0
     else:
         d0 = 1.0*(Tx-Bx)/(Ty-By)
-    if My  == By:
+    if My - By == 0:
         d1 = 0
     else:
         d1 = 1.0*(Mx-Bx)/(My-By)
         #print "pnts:(",x0,", ",y0,")(",x1,", ",y1,")(",x2,", ",y2,")"
-        #print "vals:(",Bx,", ",By,")(",Mx,", ",My,")(",Tx,", ",Ty,")"
+    #print "vals:(",Bx,", ",By,")(",Mx,", ",My,")(",Tx,", ",Ty,")"
 
-    while y< Ty - By:      
-        if (y>=My):
+    y = By
+    while (Ty - y) > 0:
+        if ( y >= My ):
             d1 = 1.0 * (Tx - Mx)/ (Ty - My)
         draw_line(screen, X0, By, X1, By, color)
         X0 += d0
