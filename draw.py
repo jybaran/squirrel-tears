@@ -49,13 +49,75 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
     My = 0
     Tx = 0
     Ty = 0
-    p = sorted([(x0,y0), (x1, y1), (x2, y2)])
-    Bx = round(p[0][0])
-    By = round(p[0][1])
-    Mx = round(p[1][0])
-    My = round(p[1][1])
-    Tx = round(p[2][0])
-    Ty = round(p[2][1])
+    #find Bx, By
+    if y0 == y1: #two are the same
+        Mx = x0
+        My = y0
+        if y1 > y2: #third pt is below other two
+            Bx = x2
+            By = y2
+            Tx = x1
+            Ty = y1
+        elif y1 < y2: #third pt is above other two
+            Bx = x1
+            By = y1
+            Tx = x2
+            Ty = y2
+        else: #this would be a line
+            return
+    elif y0 < y1:
+        if y0 < y2:
+            Bx = x0
+            By = y0
+            if y2 > y1:
+                Tx = x2
+                Ty = y2
+                Mx = x1  
+                My = y1
+            else:
+                Tx = x1
+                Ty = y1
+                Mx = x2  
+                My = y2
+
+        else:
+            Bx = x2
+            By = y2
+            Tx = x1
+            Ty = y1
+            Mx = x0
+            My = y0
+    else:   #y1 < y0
+        if y1 < y2:
+            Bx = x1
+            By = y1
+            if y2 > y0:
+                Tx = x2
+                Ty = y2
+                Mx = x0
+                My = y0
+            else:
+                Tx = x0
+                Ty = y0
+                Mx = x2
+                My = y2
+        else:
+            Bx = x2
+            By = y2
+            Tx = x1
+            Ty = y1
+            Mx = x0
+            My = y0
+
+    ##im seeing errors in Mx,My and Tx,Ty assignment
+    if My > Ty:
+        temp = Mx
+        Mx = Tx
+        Tx = temp
+        temp = My
+        My = Ty
+        Ty = temp
+        ##not fully helping. idek
     if Ty - By == 0:
         d0 = 0
     else:
