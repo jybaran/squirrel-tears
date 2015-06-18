@@ -2,6 +2,7 @@ from display import *
 from matrix import *
 from gmath import calculate_dot
 from math import cos, sin, pi
+import random
 
 MAX_STEPS = 100
      
@@ -12,15 +13,19 @@ def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point( points, x2, y2, z2 )
     
 def draw_polygons( points, screen, color ):
-
+    z_buff = [[-9223372036854775807 for x in range(500)] for x in range(500)]
     if len(points) < 3:
         print 'Need at least 3 points to draw a polygon!'
         return
 
     p = 0
+
     while p < len( points ) - 2:
         #backface culling
         if calculate_dot( points, p ) >= 0:
+            color[0] = random.randint(0,255)
+            color[1] = random.randint(0,255)
+            color[2] = random.randint(0,255)
             draw_line( screen, points[p][0], points[p][1],
                        points[p+1][0], points[p+1][1], color )
             draw_line( screen, points[p+1][0], points[p+1][1],
@@ -44,75 +49,13 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
     My = 0
     Tx = 0
     Ty = 0
-    #find Bx, By
-    if y0 == y1: #two are the same
-        Mx = x0
-        My = y0
-        if y1 > y2: #third pt is below other two
-            Bx = x2
-            By = y2
-            Tx = x1
-            Ty = y1
-        elif y1 < y2: #third pt is above other two
-            Bx = x1
-            By = y1
-            Tx = x2
-            Ty = y2
-        else: #this would be a line
-            return
-    elif y0 < y1:
-        if y0 < y2:
-            Bx = x0
-            By = y0
-            if y2 > y1:
-                Tx = x2
-                Ty = y2
-                Mx = x1  
-                My = y1
-            else:
-                Tx = x1
-                Ty = y1
-                Mx = x2  
-                My = y2
-
-        else:
-            Bx = x2
-            By = y2
-            Tx = x1
-            Ty = y1
-            Mx = x0
-            My = y0
-    else:   #y1 < y0
-        if y1 < y2:
-            Bx = x1
-            By = y1
-            if y2 > y0:
-                Tx = x2
-                Ty = y2
-                Mx = x0
-                My = y0
-            else:
-                Tx = x0
-                Ty = y0
-                Mx = x2
-                My = y2
-        else:
-            Bx = x2
-            By = y2
-            Tx = x1
-            Ty = y1
-            Mx = x0
-            My = y0
-
-    ##im seeing errors in Mx,My and Tx,Ty assignment
-    if My > Ty:
-        temp = Mx
-        Mx = Tx
-        Tx = temp
-        temp = My
-        My = Ty
-        Ty = temp
-        ##not fully helping. idek
+    p = sorted([(x0,y0), (x1, y1), (x2, y2)])
+    Bx = round(p[0][0])
+    By = round(p[0][1])
+    Mx = round(p[1][0])
+    My = round(p[1][1])
+    Tx = round(p[2][0])
+    Ty = round(p[2][1])
     if Ty - By == 0:
         d0 = 0
     else:
@@ -470,4 +413,3 @@ def draw_line( screen, x0, y0, x1, y1, color ):
                 d = d - dy
             y = y + 1
             d = d + dx
-
