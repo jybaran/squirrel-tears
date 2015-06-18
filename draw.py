@@ -42,109 +42,43 @@ def draw_polygons( points, screen, color ):
 
 
 def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
-    #WRITE THIS
-    Bx = 0
-    By = 0
-    Mx = 0
-    My = 0
-    Tx = 0
-    Ty = 0
-    #find Bx, By
-    if y0 == y1: #two are the same
-        Mx = x0
-        My = y0
-        if y1 > y2: #third pt is below other two
-            Bx = x2
-            By = y2
-            Tx = x1
-            Ty = y1
-        elif y1 < y2: #third pt is above other two
-            Bx = x1
-            By = y1
-            Tx = x2
-            Ty = y2
-        else: #this would be a line
-            return
-    elif y0 < y1:
-        if y0 < y2:
-            Bx = x0
-            By = y0
-            if y2 > y1:
-                Tx = x2
-                Ty = y2
-                Mx = x1  
-                My = y1
-            else:
-                Tx = x1
-                Ty = y1
-                Mx = x2  
-                My = y2
-
-        else:
-            Bx = x2
-            By = y2
-            Tx = x1
-            Ty = y1
-            Mx = x0
-            My = y0
-    else:   #y1 < y0
-        if y1 < y2:
-            Bx = x1
-            By = y1
-            if y2 > y0:
-                Tx = x2
-                Ty = y2
-                Mx = x0
-                My = y0
-            else:
-                Tx = x0
-                Ty = y0
-                Mx = x2
-                My = y2
-        else:
-            Bx = x2
-            By = y2
-            Tx = x1
-            Ty = y1
-            Mx = x0
-            My = y0
-
-    ##im seeing errors in Mx,My and Tx,Ty assignment
-    if My > Ty:
-        temp = Mx
-        Mx = Tx
-        Tx = temp
-        temp = My
-        My = Ty
-        Ty = temp
-        ##not fully helping. idek
-    if Ty - By == 0:
-        d0 = 0
-    else:
-        d0 = 1.0*(Tx-Bx)/(Ty-By)
-    if My - By == 0:
-        d1 = 0
-    else:
-        d1 = 1.0*(Mx-Bx)/(My-By)
-        #print "pnts:(",x0,", ",y0,")(",x1,", ",y1,")(",x2,", ",y2,")"
-    #print "vals:(",Bx,", ",By,")(",Mx,", ",My,")(",Tx,", ",Ty,")"
-    X0 = Bx
-    X1 = Bx
+    s = sorted( [ (y0, x0), (y1, x1), (y2, x2) ] )
+    
+    Ty = round(s[2][0])
+    Tx = round(s[2][1])
+    
+    By = round(s[0][0])
+    Bx = round(s[0][1])
+    
+    My = round(s[1][0])
+    Mx = round(s[1][1])
+    
     y = By
-    while (Ty - y) > 0:
-        if (By - .5) <= My <= (By + .5):
-            d1 = 0
-        if ( y >= My ):
-            if (My - 0.5) <= Ty <= (My + .5):
+    xa = Bx #one of x-coords
+    xb = Bx
+    
+    pastM = False
+    while y < Ty: #not yet at top of triangle
+        d0 = ((Tx - Bx)*1.0)/(Ty-By)
+        if not pastM and y >= My:
+            pastM = True
+            xb = Mx
+            y = My
+        if pastM:
+            if (My - .5) <= Ty <= (My + .5):
                 d1 = 0
             else:
-                d1 = 1.0 * (Tx - Mx) / (Ty - My)
+                d1 = ((Tx - Mx)*1.0)/(Ty-My)
+        else:
+            if (By - .5) <= My <= (By + .5):
+                d1 = 0
+            else:
+                d1 = ((Mx - Bx)*1.0)/(My-By)
 
-        X0 += d0
-        X1 += d1
+        xa += d0
+        xb += d1
         y += 1
-        draw_line(screen, X0, y, X1, y, color)
-    return 0
+        draw_line( screen, int(xa), int(y), int(xb), int(y), color )
 
 
 def add_box( points, x, y, z, width, height, depth ):
