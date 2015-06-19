@@ -79,6 +79,12 @@ num_frames = 1
 varies = {}
 defaultFileNames = ["Idiot","Stupid","Forgetful","Lazy","Dumbfuck"]
 has_anim= False
+ambK = [.5, .5, .5] #ambient light STRENGTH all vals <= 1
+ambI = [250, 0, 0] #ambient light COLOR
+speK = [.15, .15, .15] #all vals (0,1) speK+difK <= 1
+difK = [.6, .6, .6] #all vals (0,1) speK+difK <= 1
+light_pos = [0,500,100] #(x,y,z) pos 
+
 def first_pass( commands ):
     global basename
     global num_frames
@@ -195,29 +201,52 @@ def run(filename):
             if command[0] == "display":
                 display(screen)
 
+            if command[0] == "ambient":
+                ambK[0] = command[1]
+                ambK[1] = command[2]
+                ambK[2] = command[3]
+
+                ambI[0] = command[4]
+                ambI[1] = command[5]
+                ambI[2] = command[6]
+                
+            if command[0] == "specular":
+                speK[0] = command[1]
+                speK[1] = command[2]
+                speK[2] = command[3]
+                
+            if command[0] == "diffuse":
+                difK[0] = command[1]
+                difK[1] = command[2]
+                difK[2] = command[3]
+
+            if command[0] == "light":
+                new_light = [ command[1], command[2], command[3] ]
+                light_post.append(new_light)
+                
             if command[0] == "sphere":
                 m = []
                 add_sphere(m, command[1], command[2], command[3], command[4], 5)
                 matrix_mult(stack[-1], m)
-                draw_polygons( m, screen, color )
+                draw_polygons( m, screen, color, ambK, speK, difK, ambI, light_pos )
 
             if command[0] == "torus":
                 m = []
                 add_torus(m, command[1], command[2], command[3], command[4], command[5], 5)
                 matrix_mult(stack[-1], m)
-                draw_polygons( m, screen, color )
+                draw_polygons( m, screen, color, ambK, speK, difK, ambI, light_pos )
 
             if command[0] == "box":                
                 m = []
                 add_box(m, *command[1:])
                 matrix_mult(stack[-1], m)
-                draw_polygons( m, screen, color )
+                draw_polygons( m, screen, color, ambK, speK, difK, ambI, light_pos )
 
             if command[0] == "line":
                 m = []
                 add_edge(m, *command[1:])
                 matrix_mult(stack[-1], m)
-                draw_lines( m, screen, color )
+                draw_lines( m, screen, color)
 
             if command[0] == "bezier":
                 m = []
@@ -235,7 +264,7 @@ def run(filename):
                 m = []
                 add_circle(m, command[1], command[2], command[3], command[4], .05)
                 matrix_mult(stack[-1], m)
-                draw_lines( m, screen, color )
+                draw_lines( m, screen, color, ambK, speK, difK )
             if command[0] in ["move","scale","rotate"]:
                 if command[0] == "move":
                     xval = command[1]

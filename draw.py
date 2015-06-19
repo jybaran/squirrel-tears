@@ -13,8 +13,12 @@ def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point( points, x1, y1, z1 )
     add_point( points, x2, y2, z2 )
     
-def draw_polygons( points, screen, color ):
-    
+def draw_polygons( points, screen, color, ambK, specK, diffK, ambI, light_pos):
+    #light_pos = [x,y,z] position of light source
+    #ambK = [a,b,c] values are strength of ambient RBG
+    #ambI = [a,b,c] values are RBG values for ambient light
+    #specK = [a,b,c] values are strength of specular reflcetion
+    #diffK = [a,b,c] values are strength of diffuse relection
     if len(points) < 3:
         print 'Need at least 3 points to draw a polygon!'
         return
@@ -27,6 +31,20 @@ def draw_polygons( points, screen, color ):
             color[0] = random.randint(0,255)
             color[1] = random.randint(0,255)
             color[2] = random.randint(0,255)
+
+            ambI_R = ambI[0]*ambK[0]
+            ambI_G = ambI[1]*ambK[1]
+            ambI_B = ambI[2]*ambK[2]
+
+            difI_R = calculate_dot_light(points,p,light_pos)*ambI_R*diffK[0]
+            difI_G = calculate_dot_light(points,p,light_pos)*ambI_G*diffK[1]
+            difI_B = calculate_dot_light(points,p,light_pos)*ambI_B*diffK[2]
+            
+            specI_R = calculate_specular(ambI_R,specK[0],points,p,light_pos)
+            specI_G = calculate_specular(ambI_G,specK[1],points,p,light_pos)
+            specI_B = calculate_specular(ambI_B,specK[2],points,p,light_pos)
+
+            
             z_plane = calculate_plane( screen,
                                        points[p][0], points[p][1], points[p][2],
                                        points[p+1][0], points[p+1][1], points[p+1][2],
@@ -54,7 +72,12 @@ def draw_polygons( points, screen, color ):
                               points[p+2][0], points[p+2][1] )
         p+= 3
 
+def calculate_specular( ambI, diffK, points, p, light_pos):
+    return 0
 
+def calculate_dot_light(points, p, light_pos):
+    return 0
+    
 def calculate_plane( screen, x0, y0, z0, x1, y1, z1, x2, y2, z2):
     #given 3 points (aka triangle vertices), determine the unique plane equation
     #rx + sy + tz = k
@@ -78,6 +101,12 @@ def cross_product(v1, v2):
     n[1] = v1[2]*v2[0] - v1[0]*v2[2]
     n[2] = v1[0]*v2[1] - v1[1]*v2[0]
     return n
+
+def dot_product(v1, v2):
+    dot = v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2]
+    mag = ( (v1[0] * v1[0]) + (v1[1] * v1[1]) + (v1[2] * v1[2]) ) ** 0.5
+    mag*=( (v2[0] * v2[0]) + (v2[1] * v2[1]) + (v2[2] * v2[2]) ) ** 0.5
+    return dot/mag
 
 def scanline_convert( screen, color, zplane, points, x0, y0, x1, y1, x2, y2 ):
     s = sorted( [ (y0, x0), (y1, x1), (y2, x2) ] )
