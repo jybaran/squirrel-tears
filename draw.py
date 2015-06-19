@@ -69,7 +69,7 @@ def draw_polygons( points, screen, color, ambK, specK, diffK, ambI, light_pos):
             scanline_convert( screen, color, z_plane,
                               points,
                               points[p][0], points[p][1],
-                              points[p+1][0], points[p+2][1],
+                              points[p+1][0], points[p+1][1],
                               points[p+2][0], points[p+2][1] )
         p+= 3
 
@@ -144,12 +144,12 @@ def scanline_convert( screen, color, zplane, points, x0, y0, x1, y1, x2, y2 ):
             xb = Mx
             y = My
         if pastM:
-            if (My - .5) <= Ty <= (My + .5):
+            if Ty == My:
                 d1 = 0
             else:
                 d1 = ((Tx - Mx)*1.0)/(Ty-My)
         else:
-            if (By - .5) <= My <= (By + .5):
+            if By == My:
                 d1 = 0
             else:
                 d1 = ((Mx - Bx)*1.0)/(My-By)
