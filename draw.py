@@ -58,19 +58,18 @@ def draw_polygons( points, screen, color ):
 def calculate_plane( screen, x0, y0, z0, x1, y1, z1, x2, y2, z2):
     #given 3 points (aka triangle vertices), determine the unique plane equation
     #rx + sy + tz = k
-    print "points: (",x0,",",y0,",",z0,"),\n\t(",x1,",",y1,",",z1,"), \n\t(",x2,",",y2,",",z2,")"
+    #print "points: (",x0,",",y0,",",z0,"),\n\t(",x1,",",y1,",",z1,"), \n\t(",x2,",",y2,",",z2,")"
     v1 = [x0-x1, y0-y1, z0-z1]
     v2 = [x0-x2, y0-y2, z0-z2]
-    print "v1: ",v1[0],",",v1[1],",",v1[2]
-    print "v2: ",v2[0],",",v2[1],",",v2[2]
+    #print "v1: ",v1[0],",",v1[1],",",v1[2]
+    #print "v2: ",v2[0],",",v2[1],",",v2[2]
     n = cross_product(v1, v2)
     r = n[0]
     s = n[1]
     t = n[2]
     k = r*x0 + s*y0 + t*z0
-    #plane = [r,s,t,k]
     plane = [r,s,t,k]
-    print "plane: ",r,",",s,",",t,"=",k
+    #print "plane: ",r,",",s,",",t,"=",k
     return plane
 
 def cross_product(v1, v2):
