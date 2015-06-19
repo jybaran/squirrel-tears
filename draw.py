@@ -1,6 +1,6 @@
 from display import *
 from matrix import *
-from gmath import calculate_dot
+from gmath import *
 from math import cos, sin, pi
 import random
 
@@ -28,22 +28,23 @@ def draw_polygons( points, screen, color, ambK, specK, diffK, ambI, light_pos):
     while p < len( points ) - 2:
         #backface culling
         if calculate_dot( points, p ) >= 0:
-            color[0] = random.randint(0,255)
-            color[1] = random.randint(0,255)
-            color[2] = random.randint(0,255)
+            #color[0] = random.randint(0,255)
+            #color[1] = random.randint(0,255)
+            #color[2] = random.randint(0,255)
 
             ambI_R = ambI[0]*ambK[0]
             ambI_G = ambI[1]*ambK[1]
             ambI_B = ambI[2]*ambK[2]
 
-            difI_R = calculate_dot_light(points,p,light_pos)*ambI_R*diffK[0]
-            difI_G = calculate_dot_light(points,p,light_pos)*ambI_G*diffK[1]
-            difI_B = calculate_dot_light(points,p,light_pos)*ambI_B*diffK[2]
+            diffI_R = calculate_dot_light(points,p,light_pos)*ambI_R*diffK[0]
+            diffI_G = calculate_dot_light(points,p,light_pos)*ambI_G*diffK[1]
+            diffI_B = calculate_dot_light(points,p,light_pos)*ambI_B*diffK[2]
             
             specI_R = calculate_specular(ambI_R,specK[0],points,p,light_pos)
             specI_G = calculate_specular(ambI_G,specK[1],points,p,light_pos)
             specI_B = calculate_specular(ambI_B,specK[2],points,p,light_pos)
 
+            color=(int(ambI_R+diffI_R+specI_R),int(ambI_G+diffI_G+specI_G),int(ambI_B+diffI_B+specI_B))
             
             z_plane = calculate_plane( screen,
                                        points[p][0], points[p][1], points[p][2],
@@ -72,11 +73,22 @@ def draw_polygons( points, screen, color, ambK, specK, diffK, ambI, light_pos):
                               points[p+2][0], points[p+2][1] )
         p+= 3
 
-def calculate_specular( ambI, diffK, points, p, light_pos):
-    return 0
+def calculate_specular( ambI, specK, points, p, light_pos):
+    dot = calculate_dot_light(points,p,light_pos)
 
-def calculate_dot_light(points, p, light_pos):
-    return 0
+    ax = points[p+1][0] - points[p][0]
+    ay = points[p+1][1] - points[p][1]
+    az = points[p+1][2] - points[p][2]
+    
+    bx = points[p][0] - points[p+2][0]
+    by = points[p][1] - points[p+2][1]
+    bz = points[p][2] - points[p+2][2]
+    n =  calculate_normal( ax, ay, az, bx, by, bz )
+    
+    scalar_mult([n], 2*dot)
+    y = [n[0]-light_pos[0],n[1]-light_pos[1],n[2]-light_pos[2]]
+    return ambI*specK*dot_product(y,[250,250,-10])**4
+
     
 def calculate_plane( screen, x0, y0, z0, x1, y1, z1, x2, y2, z2):
     #given 3 points (aka triangle vertices), determine the unique plane equation
