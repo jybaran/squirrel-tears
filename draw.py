@@ -4,6 +4,7 @@ from gmath import calculate_dot
 from math import cos, sin, pi
 import random
 
+Z_BUFF = [[-9223372036854775807 for x in range(500)] for x in range(500)]
 MAX_STEPS = 100
      
 
@@ -13,7 +14,7 @@ def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point( points, x2, y2, z2 )
     
 def draw_polygons( points, screen, color ):
-    z_buff = [[-9223372036854775807 for x in range(500)] for x in range(500)]
+    
     if len(points) < 3:
         print 'Need at least 3 points to draw a polygon!'
         return
@@ -57,8 +58,11 @@ def draw_polygons( points, screen, color ):
 def calculate_plane( screen, x0, y0, z0, x1, y1, z1, x2, y2, z2):
     #given 3 points (aka triangle vertices), determine the unique plane equation
     #rx + sy + tz = k
+    print "points: (",x0,",",y0,",",z0,"),\n\t(",x1,",",y1,",",z1,"), \n\t(",x2,",",y2,",",z2,")"
     v1 = [x0-x1, y0-y1, z0-z1]
     v2 = [x0-x2, y0-y2, z0-z2]
+    print "v1: ",v1[0],",",v1[1],",",v1[2]
+    print "v2: ",v2[0],",",v2[1],",",v2[2]
     n = cross_product(v1, v2)
     r = n[0]
     s = n[1]
@@ -66,6 +70,7 @@ def calculate_plane( screen, x0, y0, z0, x1, y1, z1, x2, y2, z2):
     k = r*x0 + s*y0 + t*z0
     #plane = [r,s,t,k]
     plane = [r,s,t,k]
+    print "plane: ",r,",",s,",",t,"=",k
     return plane
 
 def cross_product(v1, v2):
@@ -400,19 +405,19 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, zplane, color ):
     if dx == 0: #straight line vertical
         y = y0
         while y <= y1:
-            plot(screen, color,  x0, y)
+            plot(screen, color,  x0, y, Z_BUFF, zplane)
             y = y + 1
     elif dy == 0: #straight line horizontal
         x = x0
         while x <= x1:
-            plot(screen, color, x, y0)
+            plot(screen, color, x, y0, Z_BUFF, zplane)
             x = x + 1
     elif dy < 0:
         d = 0
         x = x0
         y = y0
         while x <= x1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y, Z_BUFF, zplane)
             if d > 0:
                 y = y - 1
                 d = d - dx
@@ -423,7 +428,7 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, zplane, color ):
         x = x0
         y = y0
         while y <= y1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y, Z_BUFF, zplane)
             if d > 0:
                 x = x - 1
                 d = d - dy
@@ -434,7 +439,7 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, zplane, color ):
         x = x0
         y = y0
         while x <= x1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y, Z_BUFF, zplane)
             if d > 0:
                 y = y + 1
                 d = d - dx
@@ -445,7 +450,7 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, zplane, color ):
         x = x0
         y = y0
         while y <= y1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y, Z_BUFF, zplane)
             if d > 0:
                 x = x + 1
                 d = d - dy

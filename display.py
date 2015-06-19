@@ -20,13 +20,19 @@ def new_screen( width = XRES, height = YRES ):
             screen[y].append( DEFAULT_COLOR[:] )
     return screen
 
-def plot( screen, color, x, y ):
+def plot( screen, color, x, y, zbuff, zplane ):
     x = int(x)
     y = int(y)
     newy = YRES - 1 - y
-    if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES):
+    #if (zplane[2] == 0 or zplane[3] == 0):
+    #    zval = 0
+    #else:
+    #    zval = int( (zplane[3] - zplane[0]*x - zplane[1]*newy)/(zplane[2]) )
+    if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES 
+        #and zbuff[x][newy] < zval 
+         ):
         screen[x][newy] = color[:]
-        #zbuff[x][newy] = z
+        #zbuff[x][newy] = zval
 
 def clear_screen( screen ):
     for y in range( len(screen) ):
