@@ -29,7 +29,7 @@ def plot( screen, color, x, y, zbuff, zplane ):
     #else:
     #    zval = int( (zplane[3] - zplane[0]*x - zplane[1]*newy)/(zplane[2]) )
     if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES 
-        #and zbuff[x][newy] < zval 
+        #and zbuff[x][y] < zval #zbuff[x][newy]??idk 
          ):
         screen[x][newy] = color[:]
         #zbuff[x][newy] = zval

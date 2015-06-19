@@ -6,6 +6,7 @@ scale 2 2 2 bigenator
 rotate y 360 spinny
 rotate z 30 
 box 0 0 0 50 100 200 
+box 0 50 -100 50 100 50
 vary spinny 0 24 0 1
 vary bigenator 0 24 0 1
 //display
