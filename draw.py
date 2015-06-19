@@ -26,12 +26,18 @@ def draw_polygons( points, screen, color ):
             color[0] = random.randint(0,255)
             color[1] = random.randint(0,255)
             color[2] = random.randint(0,255)
-            draw_line( screen, points[p][0], points[p][1],
-                       points[p+1][0], points[p+1][1], color )
-            draw_line( screen, points[p+1][0], points[p+1][1],
-                       points[p+2][0], points[p+2][1], color )
-            draw_line( screen, points[p+2][0], points[p+2][1],
-                       points[p][0], points[p][1], color )
+            draw_line( screen, 
+                       points[p][0], points[p][1], points[p][2],
+                       points[p+1][0], points[p+1][1], points[p+1][2],
+                       color )
+            draw_line( screen, 
+                       points[p+1][0], points[p+1][1], points[p+1][2],
+                       points[p+2][0], points[p+2][1], points[p+2][2],
+                       color )
+            draw_line( screen, 
+                       points[p+2][0], points[p+2][1], points[p+2][2],
+                       points[p][0], points[p][1], points[p][2],
+                       color )
             #scanline conversion
             scanline_convert( screen, color,
                               points,
@@ -78,7 +84,10 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
         xa += d0
         xb += d1
         y += 1
-        draw_line( screen, int(xa), int(y), int(xb), int(y), color )
+        draw_line( screen, 
+                   int(xa), int(y), 0, 
+                   int(xb), int(y), 0,
+                   color )
 
 
 def add_box( points, x, y, z, width, height, depth ):
@@ -329,19 +338,21 @@ def draw_lines( matrix, screen, color ):
         
     p = 0
     while p < len( matrix ) - 1:
-        draw_line( screen, matrix[p][0], matrix[p][1],
-                   matrix[p+1][0], matrix[p+1][1], color )
+        draw_line( screen, 
+                   matrix[p][0], matrix[p][1], matrix[p][2],
+                   matrix[p+1][0], matrix[p+1][1], matrix[p+1][2],
+                   color )
         p+= 2
 
 def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
     add_point( matrix, x0, y0, z0 )
     add_point( matrix, x1, y1, z1 )
 
-def add_point( matrix, x, y, z=0 ):
+def add_point( matrix, x, y, z ):
     matrix.append( [x, y, z, 1] )
 
 
-def draw_line( screen, x0, y0, x1, y1, color ):
+def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
     #zbuff somewhere in here
     dx = x1 - x0
     dy = y1 - y0
