@@ -356,7 +356,8 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
     #zbuff somewhere in here
     dx = x1 - x0
     dy = y1 - y0
-    if dx + dy < 0:
+    dz = z1 - z0
+    if dx + dy < 0: #if points not in order
         dx = 0 - dx
         dy = 0 - dy
         tmp = x0
@@ -366,12 +367,12 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
         y0 = y1
         y1 = tmp
     
-    if dx == 0:
+    if dx == 0: #straight line vertical
         y = y0
         while y <= y1:
             plot(screen, color,  x0, y)
             y = y + 1
-    elif dy == 0:
+    elif dy == 0: #straight line horizontal
         x = x0
         while x <= x1:
             plot(screen, color, x, y0)
