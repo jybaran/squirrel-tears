@@ -26,20 +26,27 @@ def draw_polygons( points, screen, color ):
             color[0] = random.randint(0,255)
             color[1] = random.randint(0,255)
             color[2] = random.randint(0,255)
+            z_plane = calculate_plane( screen,
+                                       points[p][0], points[p][1], points[p][2],
+                                       points[p+1][0], points[p+1][1], points[p+1][2],
+                                       points[p+2][0], points[p+2][1], points[p+2][2])
             draw_line( screen, 
                        points[p][0], points[p][1], points[p][2],
                        points[p+1][0], points[p+1][1], points[p+1][2],
+                       z_plane,
                        color )
             draw_line( screen, 
                        points[p+1][0], points[p+1][1], points[p+1][2],
                        points[p+2][0], points[p+2][1], points[p+2][2],
+                       z_plane,
                        color )
             draw_line( screen, 
                        points[p+2][0], points[p+2][1], points[p+2][2],
                        points[p][0], points[p][1], points[p][2],
+                       z_plane,
                        color )
             #scanline conversion
-            scanline_convert( screen, color,
+            scanline_convert( screen, color, z_plane,
                               points,
                               points[p][0], points[p][1],
                               points[p+1][0], points[p+2][1],
@@ -47,7 +54,28 @@ def draw_polygons( points, screen, color ):
         p+= 3
 
 
-def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
+def calculate_plane( screen, x0, y0, z0, x1, y1, z1, x2, y2, z2):
+    #given 3 points (aka triangle vertices), determine the unique plane equation
+    #rx + sy + tz = k
+    v1 = [x0-x1, y0-y1, z0-z1]
+    v2 = [x0-x2, y0-y2, z0-z2]
+    n = cross_product(v1, v2)
+    r = n[0]
+    s = n[1]
+    t = n[2]
+    k = r*x0 + s*y0 + t*z0
+    #plane = [r,s,t,k]
+    plane = [r,s,t,k]
+    return plane
+
+def cross_product(v1, v2):
+    n = [0,0,0]
+    n[0] = v1[1]*v2[2] - v1[2]*v2[1]
+    n[1] = v1[2]*v2[0] - v1[0]*v2[2]
+    n[2] = v1[0]*v2[1] - v1[1]*v2[0]
+    return n
+
+def scanline_convert( screen, color, zplane, points, x0, y0, x1, y1, x2, y2 ):
     s = sorted( [ (y0, x0), (y1, x1), (y2, x2) ] )
     
     Ty = round(s[2][0])
@@ -87,6 +115,7 @@ def scanline_convert( screen, color, points, x0, y0, x1, y1, x2, y2 ):
         draw_line( screen, 
                    int(xa), int(y), 0, 
                    int(xb), int(y), 0,
+                   zplane,
                    color )
 
 
@@ -341,6 +370,7 @@ def draw_lines( matrix, screen, color ):
         draw_line( screen, 
                    matrix[p][0], matrix[p][1], matrix[p][2],
                    matrix[p+1][0], matrix[p+1][1], matrix[p+1][2],
+                   0, #zplane = 0, image is flat, z vals >0 will override, z vals <0 will not
                    color )
         p+= 2
 
@@ -352,7 +382,7 @@ def add_point( matrix, x, y, z ):
     matrix.append( [x, y, z, 1] )
 
 
-def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
+def draw_line( screen, x0, y0, z0, x1, y1, z1, zplane, color ):
     #zbuff somewhere in here
     dx = x1 - x0
     dy = y1 - y0
